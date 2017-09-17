@@ -23,13 +23,14 @@ sys.path.append(os.path.realpath(curr_dir + '/../src'))
 import numpy as np
 import libutils as lu
 import libaudio as la
-from libplot import lp
+#from libplot import lp
 import magphase as mp
 
 def analysis(wav_file, fft_len, mvf, nbins_mel=60, nbins_phase=45):
     est_file = lu.ins_pid('temp.est')
     la.reaper(wav_file, est_file)
     m_mag_mel_log, m_real_mel, m_imag_mel, v_shift, v_lf0, fs = mp.analysis_with_del_comp__ph_enc__f0_norm__from_files2(wav_file, est_file, fft_len, mvf, f0_type='lf0', mag_mel_nbins=nbins_mel, cmplx_ph_mel_nbins=nbins_phase)
+    print(v_shift)
     os.remove(est_file)
     return m_mag_mel_log, m_real_mel, m_imag_mel, v_lf0
 
@@ -62,7 +63,7 @@ def plots(m_mag_mel_log, m_real_mel, m_imag_mel, v_lf0):
     return
 
 
-if __name__ == '__main__':  
+if __name__ == '__main__':
     # CONSTANTS: So far, the vocoder has been tested only with the following constants:
     fft_len = 4096
     fs      = 48000
@@ -71,7 +72,7 @@ if __name__ == '__main__':
     wav_file_orig = 'data/wavs_nat/hvd_593.wav' # Original natural wave file. You can choose anyone provided in the /wavs_nat directory.
     out_dir       = 'data/wavs_syn' # Where the synthesised waveform will be stored.
 
-    b_plots       = True # True if you want to plot the extracted parameters.
+    b_plots       = False # True if you want to plot the extracted parameters.
     mvf           = 4500 # Maximum voiced frequency (Hz)
     nbins_mel     = 60   # Number of Mel-scaled frequency bins.
     nbins_phase   = 45   # Number of Mel-scaled frequency bins kept for phase features (real and imag). It must be <= nbins_mel
